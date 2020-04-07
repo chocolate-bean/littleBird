@@ -7,11 +7,13 @@ public class Base : MonoBehaviour {
     private AppFacade m_Facade;
     private LuaManager m_LuaMgr;
     private ResourceManager m_ResMgr;
-    private NetworkManager m_NetMgr;
-    private SoundManager m_SoundMgr;
     private TimerManager m_TimerMgr;
     private ThreadManager m_ThreadMgr;
-    private ObjectPoolManager m_ObjectPoolMgr;
+    private SDKManager m_SDKMgr;
+    private NativeManager m_NativeMgr;
+    private ShopManager m_ShopMgr;
+    private WWWManager m_WWWMgr;
+    private SoundManager m_SoundMgr;
 
     /// <summary>
     /// 注册消息
@@ -60,24 +62,6 @@ public class Base : MonoBehaviour {
         }
     }
 
-    protected NetworkManager NetManager {
-        get {
-            if (m_NetMgr == null) {
-                m_NetMgr = facade.GetManager<NetworkManager>(ManagerName.Network);
-            }
-            return m_NetMgr;
-        }
-    }
-
-    protected SoundManager SoundManager {
-        get {
-            if (m_SoundMgr == null) {
-                m_SoundMgr = facade.GetManager<SoundManager>(ManagerName.Sound);
-            }
-            return m_SoundMgr;
-        }
-    }
-
     protected TimerManager TimerManager {
         get {
             if (m_TimerMgr == null) {
@@ -96,12 +80,62 @@ public class Base : MonoBehaviour {
         }
     }
 
-    protected ObjectPoolManager ObjPoolManager {
-        get {
-            if (m_ObjectPoolMgr == null) {
-                m_ObjectPoolMgr = facade.GetManager<ObjectPoolManager>(ManagerName.ObjectPool);
+    protected SDKManager SDKManager
+    {
+        get
+        {
+            if (m_SDKMgr == null)
+            {
+                m_SDKMgr = facade.GetManager<SDKManager>(ManagerName.SDK);
             }
-            return m_ObjectPoolMgr;
+            return m_SDKMgr;
+        }
+    }
+    protected NativeManager NativeManager
+    {
+        get
+        {
+            if (m_NativeMgr == null)
+            {
+                m_NativeMgr = facade.GetManager<NativeManager>(ManagerName.Native);
+            }
+            return m_NativeMgr;
+        }
+    }
+
+    protected WWWManager WWWManager
+    {
+        get
+        {
+            if (m_WWWMgr == null)
+            {
+                m_WWWMgr = facade.GetManager<WWWManager>(ManagerName.WWW);
+            }
+            return m_WWWMgr;
+        }
+    }
+
+    protected ShopManager ShopManager
+    {
+        get
+        {
+            if (m_ShopMgr == null)
+            {
+                m_ShopMgr = facade.GetManager<ShopManager>(ManagerName.SDK);
+            }
+            return m_ShopMgr;
+        }
+    }
+
+    protected SoundManager SoundManager
+    {
+        get
+        {
+            if (m_SoundMgr == null)
+            {
+                m_SoundMgr = facade.GetManager<SoundManager>(ManagerName.Sound);
+            }
+            return m_SoundMgr;
         }
     }
 }

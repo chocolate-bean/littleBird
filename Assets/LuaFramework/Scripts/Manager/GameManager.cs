@@ -5,18 +5,25 @@ using System.Collections.Generic;
 using LuaInterface;
 using System.Reflection;
 using System.IO;
-
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.Networking;
 
 namespace LuaFramework {
     public class GameManager : Manager {
         protected static bool initialize = false;
         private List<string> downloadFiles = new List<string>();
 
+        private float ExtractProgress = 0;
+
         /// <summary>
         /// 初始化游戏管理器
         /// </summary>
         void Awake() {
             Init();
+#if GP
+            HideOnGP();
+#endif
         }
 
         /// <summary>
@@ -24,10 +31,22 @@ namespace LuaFramework {
         /// </summary>
         void Init() {
             DontDestroyOnLoad(gameObject);  //防止销毁自己
-
+            Application.runInBackground = true;  //始终允许后台执行
+            ExtractProgress = 100;
             CheckExtractResource(); //释放资源
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.targetFrameRate = AppConst.GameFrameRate;
+        }
+
+        /// <summary>
+        /// 隐藏六字真言
+        /// </summary>
+        void HideOnGP() {
+            var tipsBg = GameObject.Find("tipsBg");
+            if (tipsBg)
+            {
+                tipsBg.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -38,6 +57,7 @@ namespace LuaFramework {
               Directory.Exists(Util.DataPath + "lua/") && File.Exists(Util.DataPath + "files.txt");
             if (isExists || AppConst.DebugMode) {
                 StartCoroutine(OnUpdateResource());
+
                 return;   //文件已经解压过了，自己可添加检查文件列表逻辑
             }
             StartCoroutine(OnExtractResource());    //启动释放协成 
@@ -58,11 +78,10 @@ namespace LuaFramework {
             Debug.Log(infile);
             Debug.Log(outfile);
             if (Application.platform == RuntimePlatform.Android) {
-                WWW www = new WWW(infile);
-                yield return www;
-
-                if (www.isDone) {
-                    File.WriteAllBytes(outfile, www.bytes);
+                UnityWebRequest request = UnityWebRequest.Get(infile);
+                yield return request.SendWebRequest();;
+                if (request.isDone) {
+                    File.WriteAllBytes(outfile, request.downloadHandler.data);
                 }
                 yield return 0;
             } else File.Copy(infile, outfile, true);
@@ -70,6 +89,17 @@ namespace LuaFramework {
 
             //释放所有文件到数据目录
             string[] files = File.ReadAllLines(outfile);
+
+            Text progressName = GameObject.Find("progressName").GetComponent<Text>();
+#if GP
+            progressName.text = "正在加載...(1/2)";
+#else
+            progressName.text = "正在加载...(1/2)";
+#endif
+            Slider progressBar = GameObject.Find("progressBar").GetComponent<Slider>();
+            float curFileIndex = 0;
+            float totleFiles = files.Length;
+
             foreach (var file in files) {
                 string[] fs = file.Split('|');
                 infile = resPath + fs[0];  //
@@ -82,20 +112,26 @@ namespace LuaFramework {
                 string dir = Path.GetDirectoryName(outfile);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-                if (Application.platform == RuntimePlatform.Android) {
-                    WWW www = new WWW(infile);
-                    yield return www;
-
-                    if (www.isDone) {
-                        File.WriteAllBytes(outfile, www.bytes);
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    UnityWebRequest request = UnityWebRequest.Get(infile);
+                    yield return request.SendWebRequest();;
+                    if (request.isDone) {
+                        File.WriteAllBytes(outfile, request.downloadHandler.data);
                     }
                     yield return 0;
-                } else {
+                }
+                else
+                {
                     if (File.Exists(outfile)) {
                         File.Delete(outfile);
                     }
                     File.Copy(infile, outfile, true);
                 }
+
+                progressBar.value = curFileIndex / totleFiles;
+                curFileIndex = curFileIndex + 1;
+
                 yield return new WaitForEndOfFrame();
             }
             message = "解包完成!!!";
@@ -115,6 +151,10 @@ namespace LuaFramework {
                 OnResourceInited();
                 yield break;
             }
+
+            Text progressName = GameObject.Find("progressName").GetComponent<Text>();
+            Slider progressBar = GameObject.Find("progressBar").GetComponent<Slider>();
+
             string dataPath = Util.DataPath;  //数据目录
             string url = AppConst.WebUrl;
             string message = string.Empty;
@@ -122,23 +162,27 @@ namespace LuaFramework {
             string listUrl = url + "files.txt?v=" + random;
             Debug.LogWarning("LoadUpdate---->>>" + listUrl);
 
-            WWW www = new WWW(listUrl); yield return www;
-            if (www.error != null) {
+            UnityWebRequest request = UnityWebRequest.Get(listUrl);
+            yield return request.SendWebRequest();
+            if (request.isNetworkError) {
                 OnUpdateFailed(string.Empty);
                 yield break;
-            }
+            } 
             if (!Directory.Exists(dataPath)) {
                 Directory.CreateDirectory(dataPath);
             }
-            File.WriteAllBytes(dataPath + "files.txt", www.bytes);
-            string filesText = www.text;
+            File.WriteAllBytes(dataPath + "files.txt", request.downloadHandler.data);
+            string filesText = request.downloadHandler.text;
             string[] files = filesText.Split('\n');
+
+            float totleFiles = files.Length;
 
             for (int i = 0; i < files.Length; i++) {
                 if (string.IsNullOrEmpty(files[i])) continue;
                 string[] keyValue = files[i].Split('|');
                 string f = keyValue[0];
                 string localfile = (dataPath + f).Trim();
+                Debug.Log(localfile);
                 string path = Path.GetDirectoryName(localfile);
                 if (!Directory.Exists(path)) {
                     Directory.CreateDirectory(path);
@@ -165,7 +209,16 @@ namespace LuaFramework {
                      */
                     //这里都是资源文件，用线程下载
                     BeginDownload(fileUrl, localfile);
-                    while (!(IsDownOK(localfile))) { yield return new WaitForEndOfFrame(); }
+                    while (!(IsDownOK(localfile)))
+                    {
+#if GP
+                        progressName.text = "正在加載...(2/2)";
+#else
+                        progressName.text = "正在加载...(1/2)";
+#endif
+                        progressBar.value = i / totleFiles;
+                        yield return new WaitForEndOfFrame();
+                    }
                 }
             }
             yield return new WaitForEndOfFrame();
@@ -221,7 +274,7 @@ namespace LuaFramework {
         public void OnResourceInited() {
 #if ASYNC_MODE
             ResManager.Initialize(AppConst.AssetDir, delegate() {
-                Debug.Log("Initialize OK!!!");
+                Debug.Log("初始化结束!!");
                 this.OnInitialize();
             });
 #else
@@ -232,68 +285,8 @@ namespace LuaFramework {
 
         void OnInitialize() {
             LuaManager.InitStart();
-            // LuaManager.DoFile("Logic/Game");         //加载游戏
-            // LuaManager.DoFile("Logic/Network");      //加载网络
-            // NetManager.OnInit();                     //初始化网络
-            // Util.CallMethod("Game", "OnInitOK");     //初始化完成
 
-            initialize = true;
-
-            // //类对象池测试
-            // var classObjPool = ObjPoolManager.CreatePool<TestObjectClass>(OnPoolGetElement, OnPoolPushElement);
-            // //方法1
-            // //objPool.Release(new TestObjectClass("abcd", 100, 200f));
-            // //var testObj1 = objPool.Get();
-
-            // //方法2
-            // ObjPoolManager.Release<TestObjectClass>(new TestObjectClass("abcd", 100, 200f));
-            // var testObj1 = ObjPoolManager.Get<TestObjectClass>();
-
-            // Debugger.Log("TestObjectClass--->>>" + testObj1.ToString());
-
-            // //游戏对象池测试
-            // var prefab = Resources.Load("TestGameObjectPrefab", typeof(GameObject)) as GameObject;
-            // var gameObjPool = ObjPoolManager.CreatePool("TestGameObject", 5, 10, prefab);
-
-            // var gameObj = Instantiate(prefab) as GameObject;
-            // gameObj.name = "TestGameObject_01";
-            // gameObj.transform.localScale = Vector3.one;
-            // gameObj.transform.localPosition = Vector3.zero;
-
-            // ObjPoolManager.Release("TestGameObject", gameObj);
-            // var backObj = ObjPoolManager.Get("TestGameObject");
-            // backObj.transform.SetParent(null);
-
-            // Debug.Log("TestGameObject--->>>" + backObj);
-        }
-
-        /// <summary>
-        /// 当从池子里面获取时
-        /// </summary>
-        /// <param name="obj"></param>
-        void OnPoolGetElement(TestObjectClass obj) {
-            Debug.Log("OnPoolGetElement--->>>" + obj);
-        }
-
-        /// <summary>
-        /// 当放回池子里面时
-        /// </summary>
-        /// <param name="obj"></param>
-        void OnPoolPushElement(TestObjectClass obj) {
-            Debug.Log("OnPoolPushElement--->>>" + obj);
-        }
-
-        /// <summary>
-        /// 析构函数
-        /// </summary>
-        void OnDestroy() {
-            if (NetManager != null) {
-                NetManager.Unload();
-            }
-            if (LuaManager != null) {
-                LuaManager.Close();
-            }
-            Debug.Log("~GameManager was destroyed");
+            LuaManager.StartGame();
         }
     }
 }

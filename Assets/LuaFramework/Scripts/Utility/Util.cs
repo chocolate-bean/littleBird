@@ -52,7 +52,7 @@ namespace LuaFramework {
         /// </summary>
         public static T Get<T>(GameObject go, string subnode) where T : Component {
             if (go != null) {
-                Transform sub = go.transform.FindChild(subnode);
+                Transform sub = go.transform.Find(subnode);
                 if (sub != null) return sub.GetComponent<T>();
             }
             return null;
@@ -63,7 +63,7 @@ namespace LuaFramework {
         /// </summary>
         public static T Get<T>(Transform go, string subnode) where T : Component {
             if (go != null) {
-                Transform sub = go.FindChild(subnode);
+                Transform sub = go.Find(subnode);
                 if (sub != null) return sub.GetComponent<T>();
             }
             return null;
@@ -73,7 +73,7 @@ namespace LuaFramework {
         /// 搜索子物体组件-Component版
         /// </summary>
         public static T Get<T>(Component go, string subnode) where T : Component {
-            return go.transform.FindChild(subnode).GetComponent<T>();
+            return go.transform.Find(subnode).GetComponent<T>();
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace LuaFramework {
         /// 查找子对象
         /// </summary>
         public static GameObject Child(Transform go, string subnode) {
-            Transform tran = go.FindChild(subnode);
+            Transform tran = go.Find(subnode);
             if (tran == null) return null;
             return tran.gameObject;
         }
@@ -124,7 +124,7 @@ namespace LuaFramework {
         /// 取平级对象
         /// </summary>
         public static GameObject Peer(Transform go, string subnode) {
-            Transform tran = go.parent.FindChild(subnode);
+            Transform tran = go.parent.Find(subnode);
             if (tran == null) return null;
             return tran.gameObject;
         }
@@ -194,7 +194,8 @@ namespace LuaFramework {
                 if (Application.isMobilePlatform) {
                     return Application.persistentDataPath + "/" + game + "/";
                 }
-                if (AppConst.DebugMode) {
+                if (AppConst.DebugMode)
+                {
                     return Application.dataPath + "/" + AppConst.AssetDir + "/";
                 }
                 if (Application.platform == RuntimePlatform.OSXEditor) {
@@ -306,7 +307,7 @@ namespace LuaFramework {
             return luaMgr.CallFunction(module + "." + func, args);
         }
 
-                /// <summary>
+        /// <summary>
         /// 检查运行环境
         /// </summary>
         public static bool CheckEnvironment() {
@@ -318,11 +319,6 @@ namespace LuaFramework {
                 return false;
             } else if (resultId == -2) {
                 Debug.LogError("没有找到Wrap脚本缓存，单击Lua菜单下Gen Lua Wrap Files生成脚本！！");
-                EditorApplication.isPlaying = false;
-                return false;
-            }
-            if (Application.loadedLevelName == "Test" && !AppConst.DebugMode) {
-                Debug.LogError("测试场景，必须打开调试模式，AppConst.DebugMode = true！！");
                 EditorApplication.isPlaying = false;
                 return false;
             }

@@ -23,13 +23,6 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 面板管理器
-        /// </summary>
-        public static PanelManager GetPanelManager() {
-            return AppFacade.Instance.GetManager<PanelManager>(ManagerName.Panel);
-        }
-
-        /// <summary>
         /// 资源管理器
         /// </summary>
         public static ResourceManager GetResManager() {
@@ -37,17 +30,42 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 网络管理器
+        /// SDK管理器
         /// </summary>
-        public static NetworkManager GetNetManager() {
-            return AppFacade.Instance.GetManager<NetworkManager>(ManagerName.Network);
+        public static SDKManager GetSDKManager()
+        {
+            return AppFacade.Instance.GetManager<SDKManager>(ManagerName.SDK);
+        }
+        /// <summary>
+        /// Native管理器
+        /// </summary>
+        public static NativeManager GetNativeManager()
+        {
+            return AppFacade.Instance.GetManager<NativeManager>(ManagerName.Native);
         }
 
         /// <summary>
-        /// 音乐管理器
+        /// WWW管理器
         /// </summary>
-        public static SoundManager GetSoundManager() {
+        public static WWWManager GetWWWManager()
+        {
+            return AppFacade.Instance.GetManager<WWWManager>(ManagerName.WWW);
+        }
+
+        /// <summary>
+        /// Sound管理器
+        /// </summary>
+        public static SoundManager GetSoundManager()
+        {
             return AppFacade.Instance.GetManager<SoundManager>(ManagerName.Sound);
+        }
+
+        /// <summary>
+        /// 商店管理器
+        /// </summary>
+        public static ShopManager GetShopManager()
+        {
+            return AppFacade.Instance.GetManager<ShopManager>(ManagerName.Shop);
         }
 
 

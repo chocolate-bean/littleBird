@@ -7,61 +7,28 @@ public class LuaFramework_SoundManagerWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(LuaFramework.SoundManager), typeof(Manager));
-		L.RegFunction("LoadAudioClip", LoadAudioClip);
-		L.RegFunction("CanPlayBackSound", CanPlayBackSound);
-		L.RegFunction("PlayBacksound", PlayBacksound);
-		L.RegFunction("CanPlaySoundEffect", CanPlaySoundEffect);
-		L.RegFunction("Play", Play);
+		L.RegFunction("PlayBGM", PlayBGM);
+		L.RegFunction("StopBGM", StopBGM);
+		L.RegFunction("PauseBGM", PauseBGM);
+		L.RegFunction("ChangeBGM", ChangeBGM);
+		L.RegFunction("PlaySound", PlaySound);
+		L.RegFunction("CloseSound", CloseSound);
+		L.RegFunction("PlaySoundWithNewSource", PlaySoundWithNewSource);
+		L.RegFunction("playSound", playSound);
+		L.RegFunction("StopSoundWithName", StopSoundWithName);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.EndClass();
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int LoadAudioClip(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
-			string arg0 = ToLua.CheckString(L, 2);
-			UnityEngine.AudioClip o = obj.LoadAudioClip(arg0);
-			ToLua.PushSealed(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int CanPlayBackSound(IntPtr L)
+	static int PlayBGM(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
-			bool o = obj.CanPlayBackSound();
-			LuaDLL.lua_pushboolean(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int PlayBacksound(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 3);
-			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
-			string arg0 = ToLua.CheckString(L, 2);
-			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
-			obj.PlayBacksound(arg0, arg1);
+			obj.PlayBGM();
 			return 0;
 		}
 		catch (Exception e)
@@ -71,14 +38,119 @@ public class LuaFramework_SoundManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int CanPlaySoundEffect(IntPtr L)
+	static int StopBGM(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
 			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
-			bool o = obj.CanPlaySoundEffect();
-			LuaDLL.lua_pushboolean(L, o);
+			obj.StopBGM();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int PauseBGM(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
+			obj.PauseBGM();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int ChangeBGM(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.ChangeBGM(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int PlaySound(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.PlaySound(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CloseSound(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
+			obj.CloseSound();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int PlaySoundWithNewSource(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 4);
+			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			bool arg1 = LuaDLL.luaL_checkboolean(L, 3);
+			LuaFunction arg2 = ToLua.CheckLuaFunction(L, 4);
+			obj.PlaySoundWithNewSource(arg0, arg1, arg2);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int playSound(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 5);
+			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
+			UnityEngine.AudioSource arg0 = (UnityEngine.AudioSource)ToLua.CheckObject(L, 2, typeof(UnityEngine.AudioSource));
+			string arg1 = ToLua.CheckString(L, 3);
+			bool arg2 = LuaDLL.luaL_checkboolean(L, 4);
+			LuaFunction arg3 = ToLua.CheckLuaFunction(L, 5);
+			System.Collections.IEnumerator o = obj.playSound(arg0, arg1, arg2, arg3);
+			ToLua.Push(L, o);
 			return 1;
 		}
 		catch (Exception e)
@@ -88,15 +160,14 @@ public class LuaFramework_SoundManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Play(IntPtr L)
+	static int StopSoundWithName(IntPtr L)
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 3);
+			ToLua.CheckArgsCount(L, 2);
 			LuaFramework.SoundManager obj = (LuaFramework.SoundManager)ToLua.CheckObject<LuaFramework.SoundManager>(L, 1);
-			UnityEngine.AudioClip arg0 = (UnityEngine.AudioClip)ToLua.CheckObject(L, 2, typeof(UnityEngine.AudioClip));
-			UnityEngine.Vector3 arg1 = ToLua.ToVector3(L, 3);
-			obj.Play(arg0, arg1);
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.StopSoundWithName(arg0);
 			return 0;
 		}
 		catch (Exception e)

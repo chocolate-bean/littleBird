@@ -6,7 +6,7 @@ public class UnityEngine_PhysicsWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginStaticLibs("Physics");
+		L.BeginClass(typeof(UnityEngine.Physics), typeof(System.Object));
 		L.RegFunction("IgnoreCollision", IgnoreCollision);
 		L.RegFunction("IgnoreLayerCollision", IgnoreLayerCollision);
 		L.RegFunction("GetIgnoreLayerCollision", GetIgnoreLayerCollision);
@@ -39,6 +39,8 @@ public class UnityEngine_PhysicsWrap
 		L.RegFunction("OverlapCapsuleNonAlloc", OverlapCapsuleNonAlloc);
 		L.RegFunction("RebuildBroadphaseRegions", RebuildBroadphaseRegions);
 		L.RegFunction("BakeMesh", BakeMesh);
+		L.RegFunction("New", _CreateUnityEngine_Physics);
+		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegConstant("IgnoreRaycastLayer", 4);
 		L.RegConstant("DefaultRaycastLayers", -5);
 		L.RegConstant("AllLayers", -1);
@@ -59,7 +61,31 @@ public class UnityEngine_PhysicsWrap
 		L.RegVar("interCollisionStiffness", get_interCollisionStiffness, set_interCollisionStiffness);
 		L.RegVar("interCollisionSettingsToggle", get_interCollisionSettingsToggle, set_interCollisionSettingsToggle);
 		L.RegVar("clothGravity", get_clothGravity, set_clothGravity);
-		L.EndStaticLibs();
+		L.EndClass();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int _CreateUnityEngine_Physics(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 0)
+			{
+				UnityEngine.Physics obj = new UnityEngine.Physics();
+				ToLua.PushObject(L, obj);
+				return 1;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: UnityEngine.Physics.New");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

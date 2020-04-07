@@ -55,7 +55,7 @@ function Timer:Update()
 	self.time = self.time - delta
 	
 	if self.time <= 0 then
-		self.func()
+		self.func(self.loop)
 		
 		if self.loop > 0 then
 			self.loop = self.loop - 1

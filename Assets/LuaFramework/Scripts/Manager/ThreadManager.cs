@@ -28,11 +28,11 @@ namespace LuaFramework {
     public class ThreadManager : Manager {
         private Thread thread;
         private Action<NotiData> func;
-        private Stopwatch sw = new Stopwatch();
         private string currDownFile = string.Empty;
 
         static readonly object m_lockObject = new object();
         static Queue<ThreadEvent> events = new Queue<ThreadEvent>();
+        private Stopwatch sw = new Stopwatch();
 
         delegate void ThreadSyncEvent(NotiData data);
         private ThreadSyncEvent m_SyncEvent;

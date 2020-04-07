@@ -32,8 +32,9 @@ public class Packager {
 
     [MenuItem("LuaFramework/Build iPhone Resource", false, 100)]
     public static void BuildiPhoneResource() {
-        BuildTarget target = BuildTarget.iOS;
-        BuildAssetResource(target);
+        BuildAPK.MoveFolder("Assets/LuaFramework/Lua/.vscode", "Assets/Editor/AutoBuild/.vscode");
+        BuildAssetResource(BuildTarget.iOS);
+        BuildAPK.MoveFolder("Assets/Editor/AutoBuild/.vscode", "Assets/LuaFramework/Lua/.vscode");
     }
 
     [MenuItem("LuaFramework/Build Android Resource", false, 101)]
@@ -41,7 +42,7 @@ public class Packager {
         BuildAssetResource(BuildTarget.Android);
     }
 
-    [MenuItem("LuaFramework/Build Windows Resource", false, 102)]
+    // [MenuItem("LuaFramework/Build Windows Resource", false, 102)]
     public static void BuildWindowsResource() {
         BuildAssetResource(BuildTarget.StandaloneWindows);
     }
@@ -66,9 +67,9 @@ public class Packager {
         } else {
             HandleLuaFile();
         }
-        if (AppConst.ExampleMode) {
-            HandleExampleBundle();
-        }
+
+        HandleExampleBundle();
+        
         string resPath = "Assets/" + AppConst.AssetDir;
         BuildPipeline.BuildAssetBundles(resPath, maps.ToArray(), BuildAssetBundleOptions.None, target);
         BuildFileIndex();
@@ -155,12 +156,9 @@ public class Packager {
     static void HandleExampleBundle() {
         string resPath = AppDataPath + "/" + AppConst.AssetDir + "/";
         if (!Directory.Exists(resPath)) Directory.CreateDirectory(resPath);
-
-        AddBuildMap("prompt" + AppConst.ExtName, "*.prefab", "Assets/LuaFramework/Examples/Builds/Prompt");
-        AddBuildMap("message" + AppConst.ExtName, "*.prefab", "Assets/LuaFramework/Examples/Builds/Message");
-
-        AddBuildMap("prompt_asset" + AppConst.ExtName, "*.png", "Assets/LuaFramework/Examples/Textures/Prompt");
-        AddBuildMap("shared_asset" + AppConst.ExtName, "*.png", "Assets/LuaFramework/Examples/Textures/Shared");
+        
+        //热更资源
+        AddBuildMap("HotUpdate" + AppConst.ExtName, "*.prefab", "Assets/HotUpdate");
     }
 
     /// <summary>
@@ -290,37 +288,5 @@ public class Packager {
         Process pro = Process.Start(info);
         pro.WaitForExit();
         Directory.SetCurrentDirectory(currDir);
-    }
-
-    [MenuItem("LuaFramework/Build Protobuf-lua-gen File")]
-    public static void BuildProtobufFile() {
-        if (!AppConst.ExampleMode) {
-            UnityEngine.Debug.LogError("若使用编码Protobuf-lua-gen功能，需要自己配置外部环境！！");
-            return;
-        }
-        string dir = AppDataPath + "/Lua/3rd/pblua";
-        paths.Clear(); files.Clear(); Recursive(dir);
-
-        string protoc = "d:/protobuf-2.4.1/src/protoc.exe";
-        string protoc_gen_dir = "\"d:/protoc-gen-lua/plugin/protoc-gen-lua.bat\"";
-
-        foreach (string f in files) {
-            string name = Path.GetFileName(f);
-            string ext = Path.GetExtension(f);
-            if (!ext.Equals(".proto")) continue;
-
-            ProcessStartInfo info = new ProcessStartInfo();
-            info.FileName = protoc;
-            info.Arguments = " --lua_out=./ --plugin=protoc-gen-lua=" + protoc_gen_dir + " " + name;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-            info.UseShellExecute = true;
-            info.WorkingDirectory = dir;
-            info.ErrorDialog = true;
-            Util.Log(info.FileName + " " + info.Arguments);
-
-            Process pro = Process.Start(info);
-            pro.WaitForExit();
-        }
-        AssetDatabase.Refresh();
     }
 }

@@ -9,23 +9,34 @@ public class LuaFramework_AppConstWrap
 		L.BeginClass(typeof(LuaFramework.AppConst), typeof(System.Object));
 		L.RegFunction("New", _CreateLuaFramework_AppConst);
 		L.RegFunction("__tostring", ToLua.op_ToString);
-		L.RegConstant("DebugMode", 1);
-		L.RegConstant("ExampleMode", 1);
-		L.RegConstant("UpdateMode", 0);
+		L.RegConstant("DebugMode", 0);
 		L.RegConstant("LuaByteMode", 0);
+		L.RegConstant("UpdateMode", 0);
 		L.RegConstant("LuaBundleMode", 0);
+		L.RegVar("VersionCode", get_VersionCode, set_VersionCode);
+		L.RegVar("Version", get_Version, set_Version);
+		L.RegVar("OsVersion", get_OsVersion, set_OsVersion);
 		L.RegConstant("TimerInterval", 1);
-		L.RegConstant("GameFrameRate", 30);
+		L.RegConstant("GameFrameRate", 60);
 		L.RegVar("AppName", get_AppName, null);
 		L.RegVar("LuaTempDir", get_LuaTempDir, null);
 		L.RegVar("AppPrefix", get_AppPrefix, null);
 		L.RegVar("ExtName", get_ExtName, null);
 		L.RegVar("AssetDir", get_AssetDir, null);
-		L.RegVar("WebUrl", get_WebUrl, null);
-		L.RegVar("UserId", get_UserId, set_UserId);
-		L.RegVar("SocketPort", get_SocketPort, set_SocketPort);
-		L.RegVar("SocketAddress", get_SocketAddress, set_SocketAddress);
+		L.RegVar("sidConfig", get_sidConfig, set_sidConfig);
+		L.RegVar("channelType", get_channelType, set_channelType);
+		L.RegVar("sidConfigAttr", get_sidConfigAttr, set_sidConfigAttr);
+		L.RegVar("channelTypeAttr", get_channelTypeAttr, set_channelTypeAttr);
+		L.RegVar("Sid", get_Sid, set_Sid);
+		L.RegVar("ServerId", get_ServerId, set_ServerId);
+		L.RegVar("channel", get_channel, set_channel);
+		L.RegVar("CheckUrl", get_CheckUrl, set_CheckUrl);
+		L.RegVar("WebUrl", get_WebUrl, set_WebUrl);
+		L.RegVar("wxAppID", get_wxAppID, set_wxAppID);
+		L.RegVar("umengAppkey", get_umengAppkey, set_umengAppkey);
+		L.RegVar("alipayScheme", get_alipayScheme, null);
 		L.RegVar("FrameworkRoot", get_FrameworkRoot, null);
+		L.RegVar("IsIPhone", get_IsIPhone, null);
 		L.EndClass();
 	}
 
@@ -46,6 +57,48 @@ public class LuaFramework_AppConstWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: LuaFramework.AppConst.New");
 			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_VersionCode(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.VersionCode);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Version(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.Version);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_OsVersion(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.OsVersion);
+			return 1;
 		}
 		catch (Exception e)
 		{
@@ -124,6 +177,118 @@ public class LuaFramework_AppConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_sidConfig(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, LuaFramework.AppConst.sidConfig);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_channelType(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, LuaFramework.AppConst.channelType);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_sidConfigAttr(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushObject(L, LuaFramework.AppConst.sidConfigAttr);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_channelTypeAttr(IntPtr L)
+	{
+		try
+		{
+			ToLua.PushObject(L, LuaFramework.AppConst.channelTypeAttr);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_Sid(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.Sid);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_ServerId(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.ServerId);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_channel(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.channel);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_CheckUrl(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.CheckUrl);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_WebUrl(IntPtr L)
 	{
 		try
@@ -138,11 +303,11 @@ public class LuaFramework_AppConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_UserId(IntPtr L)
+	static int get_wxAppID(IntPtr L)
 	{
 		try
 		{
-			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.UserId);
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.wxAppID);
 			return 1;
 		}
 		catch (Exception e)
@@ -152,11 +317,11 @@ public class LuaFramework_AppConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_SocketPort(IntPtr L)
+	static int get_umengAppkey(IntPtr L)
 	{
 		try
 		{
-			LuaDLL.lua_pushinteger(L, LuaFramework.AppConst.SocketPort);
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.umengAppkey);
 			return 1;
 		}
 		catch (Exception e)
@@ -166,11 +331,11 @@ public class LuaFramework_AppConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_SocketAddress(IntPtr L)
+	static int get_alipayScheme(IntPtr L)
 	{
 		try
 		{
-			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.SocketAddress);
+			LuaDLL.lua_pushstring(L, LuaFramework.AppConst.alipayScheme);
 			return 1;
 		}
 		catch (Exception e)
@@ -194,12 +359,26 @@ public class LuaFramework_AppConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_UserId(IntPtr L)
+	static int get_IsIPhone(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushboolean(L, LuaFramework.AppConst.IsIPhone);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_VersionCode(IntPtr L)
 	{
 		try
 		{
 			string arg0 = ToLua.CheckString(L, 2);
-			LuaFramework.AppConst.UserId = arg0;
+			LuaFramework.AppConst.VersionCode = arg0;
 			return 0;
 		}
 		catch (Exception e)
@@ -209,12 +388,12 @@ public class LuaFramework_AppConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_SocketPort(IntPtr L)
+	static int set_Version(IntPtr L)
 	{
 		try
 		{
-			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			LuaFramework.AppConst.SocketPort = arg0;
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.Version = arg0;
 			return 0;
 		}
 		catch (Exception e)
@@ -224,12 +403,177 @@ public class LuaFramework_AppConstWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_SocketAddress(IntPtr L)
+	static int set_OsVersion(IntPtr L)
 	{
 		try
 		{
 			string arg0 = ToLua.CheckString(L, 2);
-			LuaFramework.AppConst.SocketAddress = arg0;
+			LuaFramework.AppConst.OsVersion = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_sidConfig(IntPtr L)
+	{
+		try
+		{
+			LuaFramework.SidConfig arg0 = (LuaFramework.SidConfig)ToLua.CheckObject(L, 2, typeof(LuaFramework.SidConfig));
+			LuaFramework.AppConst.sidConfig = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_channelType(IntPtr L)
+	{
+		try
+		{
+			LuaFramework.ChannelType arg0 = (LuaFramework.ChannelType)ToLua.CheckObject(L, 2, typeof(LuaFramework.ChannelType));
+			LuaFramework.AppConst.channelType = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_sidConfigAttr(IntPtr L)
+	{
+		try
+		{
+			LuaFramework.SidConfigAttribute arg0 = (LuaFramework.SidConfigAttribute)ToLua.CheckObject<LuaFramework.SidConfigAttribute>(L, 2);
+			LuaFramework.AppConst.sidConfigAttr = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_channelTypeAttr(IntPtr L)
+	{
+		try
+		{
+			LuaFramework.ChannelTypeAttribute arg0 = (LuaFramework.ChannelTypeAttribute)ToLua.CheckObject<LuaFramework.ChannelTypeAttribute>(L, 2);
+			LuaFramework.AppConst.channelTypeAttr = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_Sid(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.Sid = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_ServerId(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.ServerId = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_channel(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.channel = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_CheckUrl(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.CheckUrl = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_WebUrl(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.WebUrl = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_wxAppID(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.wxAppID = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_umengAppkey(IntPtr L)
+	{
+		try
+		{
+			string arg0 = ToLua.CheckString(L, 2);
+			LuaFramework.AppConst.umengAppkey = arg0;
 			return 0;
 		}
 		catch (Exception e)

@@ -36,7 +36,14 @@ namespace LuaFramework {
 
         // Load AssetBundleManifest.
         public void Initialize(string manifestName, Action initOK) {
-            m_BaseDownloadingURL = Util.GetRelativePath();
+
+            if (Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                m_BaseDownloadingURL = "http://47.74.237.216/thumbgame/cdn/update/facebook/";
+            } else {
+                m_BaseDownloadingURL = Util.GetRelativePath();
+            }
+            
             LoadAsset<AssetBundleManifest>(manifestName, new string[] { "AssetBundleManifest" }, delegate(UObject[] objs) {
                 if (objs.Length > 0) {
                     m_AssetBundleManifest = objs[0] as AssetBundleManifest;
@@ -56,6 +63,37 @@ namespace LuaFramework {
 
         public void LoadPrefab(string abName, string[] assetNames, LuaFunction func) {
             LoadAsset<GameObject>(abName, assetNames, null, func);
+        }
+
+        public void LoadPrefabByRes(string abName, string[] assetNames, LuaFunction func)
+        {
+            StartCoroutine(StartLoadAsync(assetNames, abName, func));
+        }
+
+        IEnumerator StartLoadAsync(string[] assetNames, string abName, LuaFunction func)
+        {
+            List<UObject> result = new List<UObject>();
+
+            string assetPath;
+
+            if (abName == "Static")
+            {
+                assetPath = "Prefabs/";
+            } 
+            else
+            {
+                assetPath = "Prefabs/" + abName + "/";
+            }
+            
+            for (int i = 0; i < assetNames.Length; i++)
+            {
+                ResourceRequest rr = Resources.LoadAsync<GameObject>(assetPath + assetNames[i]);
+                yield return rr;
+
+                result.Add(rr.asset);
+            }
+
+            if (func != null) func.Call((object)result.ToArray());
         }
 
         string GetRealAssetPath(string abName) {
@@ -227,14 +265,14 @@ namespace LuaFramework {
             AssetBundleInfo bundle = GetLoadedAssetBundle(abName);
             if (bundle == null) return;
 
-            if (--bundle.m_ReferencedCount <= 0) {
-                if (m_LoadRequests.ContainsKey(abName)) {
-                    return;     //如果当前AB处于Async Loading过程中，卸载会崩溃，只减去引用计数即可
-                }
-                bundle.m_AssetBundle.Unload(isThorough);
-                m_LoadedAssetBundles.Remove(abName);
-                Debug.Log(abName + " has been unloaded successfully");
+            //if (--bundle.m_ReferencedCount <= 0) {
+            if (m_LoadRequests.ContainsKey(abName)) {
+                return;     //如果当前AB处于Async Loading过程中，卸载会崩溃，只减去引用计数即可
             }
+            bundle.m_AssetBundle.Unload(isThorough);
+            m_LoadedAssetBundles.Remove(abName);
+            Debug.Log(abName + " has been unloaded successfully");
+            //}
         }
     }
 }
@@ -268,7 +306,6 @@ namespace LuaFramework {
             uri = Util.DataPath + AppConst.AssetDir;
             if (!File.Exists(uri)) return;
             stream = File.ReadAllBytes(uri);
-            // assetbundle = AssetBundle.CreateFromMemoryImmediate(stream);
             assetbundle = AssetBundle.LoadFromMemory(stream);
             manifest = assetbundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
         }

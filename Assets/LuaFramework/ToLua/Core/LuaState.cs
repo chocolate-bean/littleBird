@@ -722,7 +722,7 @@ namespace LuaInterface
         }
 
         public void AddSearchPath(string fullPath)
-        {
+        { 
             if (!Path.IsPathRooted(fullPath))
             {
                 throw new LuaException(fullPath + " is not a full path");

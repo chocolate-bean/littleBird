@@ -8,10 +8,12 @@ public class LuaFramework_LuaHelperWrap
 	{
 		L.BeginStaticLibs("LuaHelper");
 		L.RegFunction("GetType", GetType);
-		L.RegFunction("GetPanelManager", GetPanelManager);
 		L.RegFunction("GetResManager", GetResManager);
-		L.RegFunction("GetNetManager", GetNetManager);
+		L.RegFunction("GetSDKManager", GetSDKManager);
+		L.RegFunction("GetNativeManager", GetNativeManager);
+		L.RegFunction("GetWWWManager", GetWWWManager);
 		L.RegFunction("GetSoundManager", GetSoundManager);
+		L.RegFunction("GetShopManager", GetShopManager);
 		L.RegFunction("OnCallLuaFunc", OnCallLuaFunc);
 		L.RegFunction("OnJsonCallFunc", OnJsonCallFunc);
 		L.EndStaticLibs();
@@ -25,22 +27,6 @@ public class LuaFramework_LuaHelperWrap
 			ToLua.CheckArgsCount(L, 1);
 			string arg0 = ToLua.CheckString(L, 1);
 			System.Type o = LuaFramework.LuaHelper.GetType(arg0);
-			ToLua.Push(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetPanelManager(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 0);
-			LuaFramework.PanelManager o = LuaFramework.LuaHelper.GetPanelManager();
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -67,12 +53,44 @@ public class LuaFramework_LuaHelperWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int GetNetManager(IntPtr L)
+	static int GetSDKManager(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 0);
-			LuaFramework.NetworkManager o = LuaFramework.LuaHelper.GetNetManager();
+			LuaFramework.SDKManager o = LuaFramework.LuaHelper.GetSDKManager();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetNativeManager(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			LuaFramework.NativeManager o = LuaFramework.LuaHelper.GetNativeManager();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetWWWManager(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			LuaFramework.WWWManager o = LuaFramework.LuaHelper.GetWWWManager();
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -89,6 +107,22 @@ public class LuaFramework_LuaHelperWrap
 		{
 			ToLua.CheckArgsCount(L, 0);
 			LuaFramework.SoundManager o = LuaFramework.LuaHelper.GetSoundManager();
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int GetShopManager(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 0);
+			LuaFramework.ShopManager o = LuaFramework.LuaHelper.GetShopManager();
 			ToLua.Push(L, o);
 			return 1;
 		}

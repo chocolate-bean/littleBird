@@ -7,7 +7,16 @@ public class LuaFramework_LuaManagerWrap
 	public static void Register(LuaState L)
 	{
 		L.BeginClass(typeof(LuaFramework.LuaManager), typeof(Manager));
+		L.RegFunction("AddEvent", AddEvent);
 		L.RegFunction("InitStart", InitStart);
+		L.RegFunction("Update", Update);
+		L.RegFunction("StartGame", StartGame);
+		L.RegFunction("CallConnected", CallConnected);
+		L.RegFunction("CallNetworkErrorCallBack", CallNetworkErrorCallBack);
+		L.RegFunction("CallShowToptips", CallShowToptips);
+		L.RegFunction("CallReceiveCallBack", CallReceiveCallBack);
+		L.RegFunction("CallLuaNativeErrorCallback", CallLuaNativeErrorCallback);
+		L.RegFunction("CallLuaPlaySound", CallLuaPlaySound);
 		L.RegFunction("DoFile", DoFile);
 		L.RegFunction("CallFunction", CallFunction);
 		L.RegFunction("LuaGC", LuaGC);
@@ -15,6 +24,37 @@ public class LuaFramework_LuaManagerWrap
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.EndClass();
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddEvent(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 1)
+			{
+				ByteArray arg0 = (ByteArray)ToLua.CheckObject<ByteArray>(L, 1);
+				LuaFramework.LuaManager.AddEvent(arg0);
+				return 0;
+			}
+			else if (count == 2)
+			{
+				int arg0 = (int)LuaDLL.luaL_checknumber(L, 1);
+				byte[] arg1 = ToLua.CheckByteBuffer(L, 2);
+				LuaFramework.LuaManager.AddEvent(arg0, arg1);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: LuaFramework.LuaManager.AddEvent");
+			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -26,6 +66,154 @@ public class LuaFramework_LuaManagerWrap
 			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
 			obj.InitStart();
 			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Update(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+			obj.Update();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int StartGame(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+			obj.StartGame();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CallConnected(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+			obj.CallConnected();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CallNetworkErrorCallBack(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+			obj.CallNetworkErrorCallBack();
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CallShowToptips(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.CallShowToptips(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CallReceiveCallBack(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+			ByteArray arg0 = (ByteArray)ToLua.CheckObject<ByteArray>(L, 2);
+			obj.CallReceiveCallBack(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CallLuaNativeErrorCallback(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			obj.CallLuaNativeErrorCallback(arg0);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CallLuaPlaySound(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2)
+			{
+				LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				obj.CallLuaPlaySound(arg0);
+				return 0;
+			}
+			else if (count == 3)
+			{
+				LuaFramework.LuaManager obj = (LuaFramework.LuaManager)ToLua.CheckObject<LuaFramework.LuaManager>(L, 1);
+				string arg0 = ToLua.CheckString(L, 2);
+				string arg1 = ToLua.CheckString(L, 3);
+				obj.CallLuaPlaySound(arg0, arg1);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: LuaFramework.LuaManager.CallLuaPlaySound");
+			}
 		}
 		catch (Exception e)
 		{

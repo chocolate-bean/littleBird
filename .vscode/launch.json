@@ -1,0 +1,29 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Unity Editor",
+            "type": "unity",
+            "path": "${workspaceRoot}/Library/EditorInstance.json",
+            "request": "launch"
+        },
+        {
+            "name": "Unity-ulua",
+            "type": "lua",
+            "request": "attach",
+            "runtimeType": "Unity",
+            "localRoot": "${workspaceRoot}/Assets/LuaFramework/Lua",
+            "fileExtNames": [
+                ".lua",
+                ".txt",
+                ".lua.txt",
+                ".bytes"
+            ],
+            "port": 7003,
+            "printType": 1
+        },
+    ]
+}

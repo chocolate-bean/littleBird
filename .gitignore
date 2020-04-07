@@ -1,0 +1,22 @@
+Temp/
+obj/
+Library/
+Assets/Standard Assets/
+Assets/StreamingAssets/
+*.DS_Store
+*.csproj
+*.sln
+*.suo
+.vs/
+*.cache
+temp.meta
+ImportPackage/Unzip/
+iOSProject/
+# luaframework/
+AndroidProject/fishgame/
+AndroidProject/launcher/
+AndroidProject/unityLibrary/
+AndroidProject/new/
+APK/
+*.apk
+.idea/

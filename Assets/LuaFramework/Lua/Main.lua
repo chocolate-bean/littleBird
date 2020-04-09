@@ -1,4 +1,3 @@
-require("Bird.GameSurFaceScene")
 --主入口函数。从这里开始lua逻辑
 function Main()	
 	-- 断点调试代码
@@ -14,8 +13,6 @@ function Main()
 		breakSocketHandle() end, 1, -1, false)
 		timer:Start();
     end
-    
-    print("bobo")
 end
 
 -- C#提供给Lua的生命周期
@@ -38,10 +35,8 @@ function OnInitOK()
     -- WebView = require("Core/WebView")
     require("Utils.init")
 	-- 开始启动Lua逻辑
-    -- require("Update.UpdateController").new()  
-    
-    GameSurFaceScene.ctor() 
-    GameSurFaceScene.init()
+
+    require("Bird.GameSurFaceScene").new()
 end
 
 function onActiveSceneChanged(sceneName)

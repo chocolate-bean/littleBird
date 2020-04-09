@@ -90,13 +90,13 @@ namespace LuaFramework {
             //释放所有文件到数据目录
             string[] files = File.ReadAllLines(outfile);
 
-            Text progressName = GameObject.Find("progressName").GetComponent<Text>();
-#if GP
-            progressName.text = "正在加載...(1/2)";
-#else
-            progressName.text = "正在加载...(1/2)";
-#endif
-            Slider progressBar = GameObject.Find("progressBar").GetComponent<Slider>();
+//             Text progressName = GameObject.Find("progressName").GetComponent<Text>();
+// #if GP
+//             progressName.text = "正在加載...(1/2)";
+// #else
+//             progressName.text = "正在加载...(1/2)";
+// #endif
+            // Slider progressBar = GameObject.Find("progressBar").GetComponent<Slider>();
             float curFileIndex = 0;
             float totleFiles = files.Length;
 
@@ -129,7 +129,7 @@ namespace LuaFramework {
                     File.Copy(infile, outfile, true);
                 }
 
-                progressBar.value = curFileIndex / totleFiles;
+                // progressBar.value = curFileIndex / totleFiles;
                 curFileIndex = curFileIndex + 1;
 
                 yield return new WaitForEndOfFrame();
@@ -152,8 +152,8 @@ namespace LuaFramework {
                 yield break;
             }
 
-            Text progressName = GameObject.Find("progressName").GetComponent<Text>();
-            Slider progressBar = GameObject.Find("progressBar").GetComponent<Slider>();
+            // Text progressName = GameObject.Find("progressName").GetComponent<Text>();
+            // Slider progressBar = GameObject.Find("progressBar").GetComponent<Slider>();
 
             string dataPath = Util.DataPath;  //数据目录
             string url = AppConst.WebUrl;
@@ -211,12 +211,12 @@ namespace LuaFramework {
                     BeginDownload(fileUrl, localfile);
                     while (!(IsDownOK(localfile)))
                     {
-#if GP
-                        progressName.text = "正在加載...(2/2)";
-#else
-                        progressName.text = "正在加载...(1/2)";
-#endif
-                        progressBar.value = i / totleFiles;
+// #if GP
+//                         progressName.text = "正在加載...(2/2)";
+// #else
+//                         progressName.text = "正在加载...(1/2)";
+// #endif
+//                         progressBar.value = i / totleFiles;
                         yield return new WaitForEndOfFrame();
                     }
                 }

@@ -97,18 +97,18 @@ namespace LuaFramework
             Application.OpenURL(url);
 #else
             //调用第三方
-            GameObject obj = new GameObject("UniWebView");
-            UniWebView webView = obj.AddComponent<UniWebView>();
-            // webView.SetShowToolbar(true);
-            webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
-            webView.AddUrlScheme("thumbp");
-            webView.OnMessageReceived += (view, message) => {
-                UnityEngine.Object.Destroy(obj);
-                AppFacade.Instance.GetManager<SDKManager>(ManagerName.SDK).UrlCallbcak(message.Path);
-            };
+//             GameObject obj = new GameObject("UniWebView");
+//             UniWebView webView = obj.AddComponent<UniWebView>();
+//             // webView.SetShowToolbar(true);
+//             webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+//             webView.AddUrlScheme("thumbp");
+//             webView.OnMessageReceived += (view, message) => {
+//                 UnityEngine.Object.Destroy(obj);
+//                 AppFacade.Instance.GetManager<SDKManager>(ManagerName.SDK).UrlCallbcak(message.Path);
+//             };
 
-            webView.Load(url);
-            webView.Show();
+//             webView.Load(url);
+//             webView.Show();
 #endif
         }
 

@@ -158,6 +158,7 @@ public class Packager {
         if (!Directory.Exists(resPath)) Directory.CreateDirectory(resPath);
         
         //热更资源
+        //没有HotUpdate这个东西BuildResource就生成不了StreamingAssets下的文件
         AddBuildMap("HotUpdate" + AppConst.ExtName, "*.prefab", "Assets/HotUpdate");
     }
 

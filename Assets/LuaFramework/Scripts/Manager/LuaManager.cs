@@ -55,7 +55,6 @@ namespace LuaFramework {
             lua = new LuaState();
             this.OpenLibs();
             lua.LuaSetTop(0);
-
             LuaBinder.Bind(lua);
             DelegateFactory.Init();
             LuaCoroutine.Register(lua, this);

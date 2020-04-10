@@ -20,6 +20,7 @@ public static class LuaBinder
 		ChipAnimWrap.Register(L);
 		LuaDebugToolWrap.Register(L);
 		LuaValueInfoWrap.Register(L);
+		ColliderSprictWrap.Register(L);
 		ViewWrap.Register(L);
 		BaseWrap.Register(L);
 		ManagerWrap.Register(L);

@@ -189,6 +189,9 @@ public static class CustomSettings
         // 断点接入
         _GT(typeof(LuaDebugTool)),
         _GT(typeof(LuaValueInfo)),
+
+        //小鸟和墙的碰撞
+        _GT(typeof(ColliderSprict))
     };
 
     public static List<Type> dynamicList = new List<Type>()

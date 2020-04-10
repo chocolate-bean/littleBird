@@ -5,6 +5,7 @@ function GameSurFaceScene:ctor( )
     self.wallsFirst = {}
     self.screenHeight = Screen.height
     self.screenWidth = Screen.width
+    self.flag = false
     self:init()  
 end
 
@@ -15,11 +16,18 @@ function GameSurFaceScene:init( )
     self.imgbg       = UnityEngine.GameObject.Find("Canvas/Imagebg")
     self.imgbg2      = UnityEngine.GameObject.Find("Canvas/Imagebg_2")
     self.btnUp       = UnityEngine.GameObject.Find("Canvas/ButtonUp")
-    self.btnDown     = UnityEngine.GameObject.Find("Canvas/ButtonDown")
+    self.textTip     = UnityEngine.GameObject.Find("Canvas/TextGameOverTip")
+    self.textTip:SetActive(false)
 
     resMgr:LoadPrefabByRes("Common", { "wall"}, function(objs)
         self.wallPrefab = objs[0]
         self:option()
+        local csMethod = self.img1.transform.gameObject:GetComponent("ColliderSprict")
+        csMethod:SetLuaFunction(function()
+            self.flag = true
+            self.textTip:SetActive(true)
+            self.timer:Stop()
+         end )
     end)
    
 end
@@ -28,100 +36,55 @@ function GameSurFaceScene:option()
     
     self.rate = (self.screenHeight)/10
     self.imgbg2.transform.localPosition  = Vector3(self.screenWidth)
-        -- local countDelta = 0 
-        -- for k=1,5 do
-        --     for i=1,2 do
-        --         local wall = newObject(self.wallPrefab)
-        --         if k == 1 then
-        --             if i == 1 then
-        --                 self.wallsFirst[1] = wall
-        --                else
-        --                 self.wallsFirst[2] = wall   
-        --             end
-        --         else
-        --             if i== 1 then
-        --                 self.wallsFirst[k+countDelta] = wall
-        --                else
-        --                 self.wallsFirst[k+countDelta+1] = wall
-        --             end 
-        --         end
-        --         wall.transform:SetParent(self.imgbg.transform)
-        --         if i == 1 then
-        --             self.bottomWallHeight = math.random(1,4)*self.rate
-        --             wall.transform.localPosition = Vector3.New(-self.screenWidth/2+220*k,self.screenHeight/2-self.bottomWallHeight*0.5,0)
-        --             wall.transform.sizeDelta = Vector3.New(100,self.bottomWallHeight)
-        --         else
-        --             wall.transform.localPosition = Vector3.New(-self.screenWidth/2+220*k,-(self.screenHeight/2-((self.screenHeight-self.bottomWallHeight-self.rate-100))*0.5),0)
-        --             wall.transform.sizeDelta = Vector3.New(100, (self.screenHeight-self.bottomWallHeight-self.rate-100))
-        --         end
-        --     end
-        --         countDelta = countDelta + 1
-        -- end
-            self:fillWallTable(self.imgbg, self.imgbg2, self.wallsFirst, self.wallsSecond, 2)
-            -- self:fillWallTable(self.imgbg,nil,self.wallsFirst,nil,1)
-            -- self:fillWallTable(nil,self.imgbg2,nil,self.wallsSecond,1)
-
-            -- 如果这样子调用的话就会遇到一个问题 报的错误是没有 self.wallPrefab 这个成员变量或属性
-            -- self.fillWallTable(self.imgbg.transform,self.wallsFirst)
-            -- self.fillWallTable(self.imgbg2.transform,self.wallsSecond)
-
-            -- print("第一个table表的长度 "..(#self.wallsFirst))
-            -- print("第二个table表的长度 "..(#self.wallsSecond))
-
-    Timer.New(function ()
-        -- self.imgbg:SetActive(flag)
-
-        self.imgbg.transform:Translate(Vector3.New(-7,0)) 
-        self.imgbg2.transform:Translate(Vector3.New(-7,0))
-        self.img1.transform:Translate(Vector3.New(0,-2.5,0))
-        local x = self.imgbg.transform.localPosition.x
-        local x2 = self.imgbg2.transform.localPosition.x
-        -- print(self.imgbg.transform.localPosition.x)
-        
-        if x <= -self.screenWidth  then
-            self.imgbg.transform.localPosition = Vector3(self.screenWidth)
-            -- 清除table表中间的存放的预置体
-            -- for i,v in pairs(self.wallsFirst) do
-            --     destroy(v) --"userdata"
-            --     v = nil
-            -- end
-            -- self.wallsFirst = {}
-            --改成了对预置体的
-            self:fillWallTable(self.imgbg,nil, self.wallsFirst, nil, 1)
-        end
-        if x2 <= -self.screenWidth then
-            self.imgbg2.transform.localPosition = Vector3(self.screenWidth)
-            -- 清除table表中间的存放的预置体
-            -- for i,v in pairs(self.wallsSecond) do
-            --     destroy(v)
-            --     v = nil
-            -- end
-            -- self.wallsSecond = {}
-            self:fillWallTable(nil, self.imgbg2, nil, self.wallsSecond, 1)
-        end
-        
-    end, 0.009, -1, true):Start()   
+    
+    self:fillWallTable(self.imgbg, self.imgbg2, self.wallsFirst, self.wallsSecond, 2)
+    
+    self.timer = Timer.New(function ()
+                -- self.imgbg:SetActive(flag)
+                local birdY = self.img1.transform.localPosition.y
+                if birdY <= -self.screenHeight/2+25 or birdY >= self.screenHeight/2-25 then
+                    print("游戏结束")
+                    --这里需要暂停游戏
+                    self.flag = true
+                    self.textTip:SetActive(true)
+                    self.timer:Stop()  
+                end    
+                self.imgbg.transform:Translate(Vector3.New(-7,0)) 
+                self.imgbg2.transform:Translate(Vector3.New(-7,0))
+                self.img1.transform:Translate(Vector3.New(0,-2.5,0))
+                local x = self.imgbg.transform.localPosition.x
+                local x2 = self.imgbg2.transform.localPosition.x
+                -- print(self.imgbg.transform.localPosition.x)
+                
+                if x <= -self.screenWidth  then
+                    self.imgbg.transform.localPosition = Vector3(self.screenWidth)
+                    -- 清除table表中间的存放的预置体
+                    -- for i,v in pairs(self.wallsFirst) do
+                    --     destroy(v) --"userdata"
+                    --     v = nil
+                    -- end
+                    -- self.wallsFirst = {}
+                    --改成了对预置体的
+                    self:fillWallTable(self.imgbg,nil, self.wallsFirst, nil, 1)
+                end
+                if x2 <= -self.screenWidth then
+                    self.imgbg2.transform.localPosition = Vector3(self.screenWidth)
+                    -- 清除table表中间的存放的预置体
+                    -- for i,v in pairs(self.wallsSecond) do
+                    --     destroy(v)
+                    --     v = nil
+                    -- end
+                    -- self.wallsSecond = {}
+                    self:fillWallTable(nil, self.imgbg2, nil, self.wallsSecond, 1)
+                end
+                
+            end, 0.009, -1, true)
+    self.timer:Start()          
     local count = 1
     UIHelper.AddButtonClick(self.btnUp,function()
-        self.img1.transform:Translate(Vector3.New(0 ,100, 0))
-        -- self.img1.transform:TransformDirection(Vector3.New(0,50,0))
-
-    -- if #self.walls > 0 then
-    --     if count >  3 then
-    --         count = 1
-    --     else
-    --         print(type(self.walls[count]))
-    --         self.walls[count].transform:SetParent(self.outSideView.transform)
-    --         self.walls[count].transform.sizeDelta = Vector3.New(50+count*100,100+count*80)     
-    --         self.walls[count].transform.localPosition = Vector3.New((200 + count * 130),0,0)
-
-    --     end
-    --     count  = count + 1
-    --  end
-        -- self.img1.transform:RotateAround(Vector3.New(20,20),Vector3.New(20),1)
-    end)
-    UIHelper.AddButtonClick(self.btnDown,function ()
-        self.img1.transform:Translate(Vector3.New(0, -80, 0))
+        if not self.flag then
+            self.img1.transform:Translate(Vector3.New(0 ,100, 0))
+        end    
         
     end)
     -- DOTween
@@ -133,6 +96,8 @@ function GameSurFaceScene:option()
     -- end)
         -- self:zeroToScreenWidthAnimation(self.imgbg)
         -- self:doubleScreenWidthAnimation(self.imgbg2)
+    -- local x :GetComponent('colliderSprict')
+    -- x:(function)
 end
 
 function GameSurFaceScene:zeroToScreenWidthAnimation(node)
@@ -227,38 +192,6 @@ function GameSurFaceScene:fillWallTable(bg1, bg2, wallTableFirst, wallTableSecon
 
     end
 end
--- function GameSurFaceScene:fillWallTable(parent,wallTable)
---         local countDelta = 0 
---         for k=1,5 do
---             for i=1,2 do
---                 local wall = newObject(self.wallPrefab)
---                 if k == 1 then
---                     if i == 1 then
---                         wallTable[1] = wall
---                        else
---                         wallTable[2] = wall   
---                     end
---                 else
---                     if i== 1 then
---                         wallTable[k+countDelta] = wall
---                        else
---                         wallTable[k+countDelta+1] = wall
---                     end 
---                 end
---                 wall.transform:SetParent(parent)
---                 if i == 1 then
---                     self.bottomWallHeight = math.random(1,4)*self.rate
---                     wall.transform.localPosition = Vector3.New(-self.screenWidth/2+220*k,self.screenHeight/2-self.bottomWallHeight*0.5,0)
---                     wall.transform.sizeDelta = Vector3.New(100,self.bottomWallHeight)
---                 else
---                     wall.transform.localPosition = Vector3.New(-self.screenWidth/2+220*k,-(self.screenHeight/2-((self.screenHeight-self.bottomWallHeight-self.rate-100))*0.5),0)
---                     wall.transform.sizeDelta = Vector3.New(100, (self.screenHeight-self.bottomWallHeight-self.rate-100))
---                 end
---             end
---                 countDelta = countDelta + 1
---         end
-    
--- end
 
 return GameSurFaceScene
 

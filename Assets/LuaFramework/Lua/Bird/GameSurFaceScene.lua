@@ -182,9 +182,6 @@ function GameSurFaceScene:fillWallTable(bg1, bg2, wallTableFirst, wallTableSecon
                     self.bottomWallHeight = math.random(1,4)*self.rate
                     wall.transform.localPosition = Vector3.New(-self.screenWidth/2+380*k, self.screenHeight/2-self.bottomWallHeight*0.5,0)
                     wall.transform.sizeDelta = Vector3.New(100,self.bottomWallHeight)
-                    local y = wall.gameObject:GetComponent("BoxCollider2D").transform.sizeDelta.y
-                    -- print("BoxCollider2D的y "..y)
-                    print(type(y))
                 else
                     wall.transform.localPosition = Vector3.New(-self.screenWidth/2+380*k, -(self.screenHeight/2-((self.screenHeight-self.bottomWallHeight-self.rate-100))*0.5),0)
                     wall.transform.sizeDelta = Vector3.New(100, (self.screenHeight-self.bottomWallHeight-self.rate-100))
